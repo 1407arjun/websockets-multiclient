@@ -1,8 +1,12 @@
 import { VStack, Heading, Divider } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import Stack from "./components/Stack"
+import type Stream from "./types/stream"
+import Message, { MessageType } from "./types/message"
 
 export default function App() {
+    const [streams, setStreams] = useState<Stream[]>([])
+
     useEffect(() => {
         let ws = new WebSocket("ws://localhost:5000")
 
@@ -11,7 +15,43 @@ export default function App() {
             ws.send("Hello")
         }
         ws.onmessage = (ev) => {
-            console.log(ev.data)
+            const message: Message = JSON.parse(ev.data)
+
+            switch (message.type) {
+                case MessageType.ADD:
+                    setStreams((prev) => {
+                        return [
+                            ...prev,
+                            {
+                                id: message.id,
+                                value: message.value!
+                            }
+                        ]
+                    })
+                    break
+                case MessageType.UPDATE:
+                    setStreams((prev) => {
+                        prev.every((s) => {
+                            if (s.id === message.id) {
+                                s.value = message.value!
+                                return false
+                            }
+                            return true
+                        })
+                        return prev
+                    })
+                    break
+                case MessageType.REMOVE:
+                    setStreams((prev) => {
+                        prev = prev.filter((s) => {
+                            return s.id !== message.id
+                        })
+                        return prev
+                    })
+                    break
+                default:
+                    break
+            }
         }
     })
 
@@ -25,7 +65,7 @@ export default function App() {
                 Subscribe and Unsubscribe
             </Heading>
             <Divider orientation="horizontal" />
-            <Stack />
+            <Stack streams={streams} />
         </VStack>
     )
 }

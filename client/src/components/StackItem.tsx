@@ -6,8 +6,9 @@ import {
     InputLeftAddon,
     ButtonGroup
 } from "@chakra-ui/react"
+import type Stream from "../types/stream"
 
-export default function StackItem() {
+export default function StackItem(props: Stream) {
     return (
         <Stack
             w={{ base: "100%", xl: "90%" }}
@@ -16,17 +17,19 @@ export default function StackItem() {
             direction={{ base: "column", xl: "row" }}>
             <InputGroup>
                 <InputLeftAddon
-                    children="Stream"
+                    children={`Stream ${props.id}`}
                     color="gray.900"
                     h="100%"
                     fontWeight="semibold"
                 />
                 <Textarea
                     variant="outline"
-                    placeholder="Basic usage"
+                    placeholder="Jokes from this stream would show up if you subscribe"
                     isReadOnly={true}
-                    value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    value={props.value}
                     resize="vertical"
+                    roundedBottomLeft={0}
+                    roundedBottomRight={0}
                 />
             </InputGroup>
             <ButtonGroup

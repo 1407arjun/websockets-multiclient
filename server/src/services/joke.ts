@@ -7,6 +7,14 @@ type Joke = {
 }
 
 export default async (): Promise<string | undefined> => {
-    const joke: Joke = (await axios.get("https://icanhazdadjoke.com/")).data
-    return joke.joke
+    try {
+        const response = await axios.get("https://icanhazdadjoke.com/", {
+            headers: { Accept: "application/json" }
+        })
+        const joke: Joke = response.data
+        return joke.joke
+    } catch (e) {
+        console.log(e)
+        return undefined
+    }
 }
