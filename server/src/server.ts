@@ -1,9 +1,9 @@
 import { createServer } from "http"
-import { WebSocketServer } from "ws"
+import { WebSocket, WebSocketServer } from "ws"
+import { v4 as uuidv4 } from "uuid"
 
-interface connection {
+type connection = WebSocket & {
     uuid: string
-    conn: unknown
 }
 
 let connections: connection[] = []
@@ -12,12 +12,24 @@ const PORT = process.env.PORT || 5000
 const httpServer = createServer()
 const wss = new WebSocketServer({ noServer: true })
 
-wss.on("connection", (conn) => {
+wss.on("connection", (conn: connection) => {
+    conn.uuid = uuidv4()
+
     conn.on("message", (data: Buffer) => {
         console.log(data.toString())
     })
 
-    conn.send("something")
+    conn.on("close", () => {
+        connections = connections.filter((c) => {
+            return c.uuid !== conn.uuid
+        })
+        console.log(connections.length)
+        connections.forEach((c) => console.log(c.uuid))
+    })
+
+    connections.push(conn)
+    console.log(connections.length)
+    connections.forEach((c) => console.log(c.uuid))
 })
 
 httpServer.on("upgrade", (request, socket, head) => {
