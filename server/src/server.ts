@@ -2,17 +2,17 @@ import { createServer } from "http"
 import { WebSocket, WebSocketServer } from "ws"
 import { v4 as uuidv4 } from "uuid"
 
-type connection = WebSocket & {
+type Connection = WebSocket & {
     uuid: string
 }
 
-let connections: connection[] = []
+let connections: Connection[] = []
 
 const PORT = process.env.PORT || 5000
 const httpServer = createServer()
 const wss = new WebSocketServer({ noServer: true })
 
-wss.on("connection", (conn: connection) => {
+wss.on("connection", (conn: Connection) => {
     conn.uuid = uuidv4()
 
     conn.on("message", (data: Buffer) => {
