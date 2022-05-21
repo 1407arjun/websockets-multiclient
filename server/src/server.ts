@@ -1,9 +1,18 @@
-import http from "http"
+import { WebSocketServer } from "ws"
 
-const PORT = process.env.PORT || 5000
-const httpServer = http.createServer((req, res) => {
+interface connection {
+    uuid: string
+    conn: unknown
+}
 
+let connections: connection[] = []
+
+const wss = new WebSocketServer({ port: 8080 })
+
+wss.on("connection", (ws) => {
+    ws.on("message", (data: string) => {
+        console.log("received: %s", data)
+    })
+
+    ws.send("something")
 })
-
-httpServer.on("connection", stream => console.log(stream))
-httpServer.listen(PORT, () => console.log(`Server started on port ${PORT}`))
