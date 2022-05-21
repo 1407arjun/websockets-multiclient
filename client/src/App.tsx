@@ -1,7 +1,8 @@
-import "./styles/App.css"
+import { VStack, Heading, Divider } from "@chakra-ui/react"
 import { useEffect } from "react"
+import Stack from "./components/Stack"
 
-function App() {
+export default function App() {
     useEffect(() => {
         let ws = new WebSocket("ws://localhost:5000")
 
@@ -14,7 +15,17 @@ function App() {
         }
     })
 
-    return <div className="App"></div>
+    return (
+        <VStack
+            p={{ base: 8, xl: 16 }}
+            minH="100vh"
+            bgColor="gray.900"
+            color="gray.200">
+            <Heading size="xl" textAlign="center">
+                Subscribe and Unsubscribe
+            </Heading>
+            <Divider orientation="horizontal" />
+            <Stack />
+        </VStack>
+    )
 }
-
-export default App
