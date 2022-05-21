@@ -4,7 +4,7 @@ import { useEffect } from "react"
 
 function App() {
     useEffect(() => {
-        let ws = new WebSocket("ws://localhost:8080")
+        let ws = new WebSocket("ws://localhost:5000")
 
         ws.onopen = () => {
             console.log("WebSocket Client Connected")

@@ -1,3 +1,4 @@
+import { createServer } from "http"
 import { WebSocketServer } from "ws"
 
 interface connection {
@@ -7,12 +8,27 @@ interface connection {
 
 let connections: connection[] = []
 
-const wss = new WebSocketServer({ port: 8080 })
+const PORT = process.env.PORT || 5000
+const httpServer = createServer()
+const wss = new WebSocketServer({ noServer: true })
 
-wss.on("connection", (ws) => {
-    ws.on("message", (data: string) => {
-        console.log("received: %s", data)
+wss.on("connection", (conn) => {
+    conn.on("message", (data: Buffer) => {
+        console.log(data.toString())
     })
 
-    ws.send("something")
+    conn.send("something")
 })
+
+httpServer.on("upgrade", (request, socket, head) => {
+    if (request.headers.origin === "http://localhost:3000") {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+            wss.emit("connection", ws)
+        })
+    } else {
+        socket.write("401: Unauthorized")
+        socket.destroy()
+    }
+})
+
+httpServer.listen(PORT)
