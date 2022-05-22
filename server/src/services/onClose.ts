@@ -4,6 +4,9 @@ import Connection from "../types/connection"
 export default (conn: Connection) => {
     connections = connections.filter((c) => c.uuid !== conn.uuid)
     streams = streams.filter((s) => s.id !== conn.uuid)
+    connections.forEach((c) => {
+        c.streams = c.streams.filter((s) => s !== conn.uuid)
+    })
 
     let message: Message = {
         type: MessageType.REMOVE,
