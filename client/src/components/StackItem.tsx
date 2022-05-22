@@ -7,11 +7,28 @@ import {
     ButtonGroup
 } from "@chakra-ui/react"
 import { useContext } from "react"
+import Message, { MessageType } from "../types/message"
 import type Stream from "../types/stream"
 import SocketContext from "./SocketContext"
 
-export default function StackItem(props: Stream) {
+export default function StackItem(props: Stream & { i: string }) {
     const conn = useContext(SocketContext)
+
+    function subscribe() {
+        let message: Message = {
+            type: MessageType.SUBSCRIBE,
+            id: props.id
+        }
+        conn.send(JSON.stringify(message))
+    }
+
+    function unsubscribe() {
+        let message: Message = {
+            type: MessageType.UNSUBSCRIBE,
+            id: props.id
+        }
+        conn.send(JSON.stringify(message))
+    }
 
     return (
         <Stack
@@ -21,7 +38,7 @@ export default function StackItem(props: Stream) {
             direction={{ base: "column", xl: "row" }}>
             <InputGroup>
                 <InputLeftAddon
-                    children={`Stream ${props.id}`}
+                    children={`Stream ${props.i}`}
                     color="gray.900"
                     h="100%"
                     fontWeight="semibold"
@@ -41,8 +58,12 @@ export default function StackItem(props: Stream) {
                 spacing={2}
                 justifyContent="center"
                 alignItems="center">
-                <Button colorScheme="yellow">Subscribe</Button>
-                <Button colorScheme="red">Unubscribe</Button>
+                <Button colorScheme="yellow" onClick={subscribe}>
+                    Subscribe
+                </Button>
+                <Button colorScheme="red" onClick={unsubscribe}>
+                    Unubscribe
+                </Button>
             </ButtonGroup>
         </Stack>
     )

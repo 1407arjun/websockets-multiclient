@@ -2,9 +2,9 @@ import { createServer } from "http"
 import { WebSocketServer } from "ws"
 import { v4 as uuidv4 } from "uuid"
 import type Connection from "./types/connection"
-import type Stream from "./types/stream"
+import type Stream from "../../client/src/types/stream"
 import getJoke from "./services/joke"
-import Message, { MessageType } from "./types/message"
+import Message, { MessageType } from "../../client/src/types/message"
 
 let connections: Connection[] = []
 let streams: Stream[] = []
@@ -17,7 +17,7 @@ wss.on("connection", async (conn: Connection) => {
     conn.uuid = uuidv4()
 
     conn.on("message", (data: Buffer) => {
-        console.log(data.toString())
+        console.log(data.toString(), conn.uuid)
     })
 
     conn.on("close", () => {

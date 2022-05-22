@@ -13,7 +13,8 @@ export default function Stack(props: Streams) {
                 return (
                     <StackItem
                         key={stream.id}
-                        id={String(index + 1)}
+                        id={stream.id}
+                        i={String(index + 1)}
                         value={stream.value}
                     />
                 )
