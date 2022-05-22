@@ -40,17 +40,24 @@ wss.on("connection", async (conn: Connection) => {
 
     connections.push(conn)
 
-    let stream: Stream = { id: conn.uuid, value: (await getJoke())! }
+    let joke: string = "Hello" //await getJoke()
+    let stream: Stream = { id: conn.uuid, value: joke }
     streams.push(stream)
 
     console.log(connections.length)
     connections.forEach((c) => console.log(c.uuid))
 
+    conn.send(
+        JSON.stringify({ type: MessageType.INIT, id: conn.uuid, streams })
+    )
+
     let message: Message = {
         type: MessageType.ADD,
         ...stream
     }
-    conn.send(JSON.stringify(message))
+    connections.forEach((c) => {
+        if (c.uuid !== conn.uuid) c.send(JSON.stringify(message))
+    })
 })
 
 httpServer.on("upgrade", (request, socket, head) => {

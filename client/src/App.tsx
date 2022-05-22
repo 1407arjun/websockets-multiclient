@@ -4,20 +4,24 @@ import Stack from "./components/Stack"
 import type Stream from "./types/stream"
 import Message, { MessageType } from "./types/message"
 
+let ws = new WebSocket("ws://localhost:5000")
+
 export default function App() {
     const [streams, setStreams] = useState<Stream[]>([])
 
     useEffect(() => {
-        let ws = new WebSocket("ws://localhost:5000")
-
         ws.onopen = () => {
             console.log("WebSocket Client Connected")
             ws.send("Hello")
         }
+
         ws.onmessage = (ev) => {
             const message: Message = JSON.parse(ev.data)
 
             switch (message.type) {
+                case MessageType.INIT:
+                    setStreams(message.streams!)
+                    break
                 case MessageType.ADD:
                     setStreams((prev) => {
                         return [
@@ -53,7 +57,7 @@ export default function App() {
                     break
             }
         }
-    })
+    }, [])
 
     return (
         <VStack

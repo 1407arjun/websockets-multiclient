@@ -1,12 +1,7 @@
 import axios from "axios"
+import type Joke from "../types/joke"
 
-type Joke = {
-    id: string
-    joke: string
-    status: number
-}
-
-export default async (): Promise<string | undefined> => {
+export default async (): Promise<string> => {
     try {
         const response = await axios.get("https://icanhazdadjoke.com/", {
             headers: { Accept: "application/json" }
@@ -15,6 +10,6 @@ export default async (): Promise<string | undefined> => {
         return joke.joke
     } catch (e) {
         console.log(e)
-        return undefined
+        return ""
     }
 }
