@@ -23,9 +23,6 @@ export default async (conn: Connection) => {
     let stream: Stream = { id: conn.uuid, value: joke }
     streams.push(stream)
 
-    console.log(connections.length)
-    connections.forEach((c) => console.log(c.uuid))
-
     conn.send(
         JSON.stringify({
             type: MessageType.INIT,

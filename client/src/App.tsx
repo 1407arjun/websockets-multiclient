@@ -47,7 +47,6 @@ export default function App() {
                             return st
                         })
                     })
-                    console.log(streams)
                     break
                 case MessageType.REMOVE:
                     setStreams((prev) => {

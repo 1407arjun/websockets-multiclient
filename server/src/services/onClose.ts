@@ -9,9 +9,6 @@ export default (conn: Connection) => {
         return s.id !== conn.uuid
     })
 
-    console.log(connections.length)
-    connections.forEach((c) => console.log(c.uuid))
-
     let message: Message = {
         type: MessageType.REMOVE,
         id: conn.uuid
