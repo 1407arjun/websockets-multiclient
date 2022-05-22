@@ -9,5 +9,7 @@ export default (conn: Connection) => {
         type: MessageType.REMOVE,
         id: conn.uuid
     }
-    conn.send(JSON.stringify(message))
+    connections.forEach((c) => {
+        c.send(JSON.stringify(message))
+    })
 }

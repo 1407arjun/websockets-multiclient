@@ -50,10 +50,9 @@ export default function App() {
                     break
                 case MessageType.REMOVE:
                     setStreams((prev) => {
-                        prev = prev.filter((s) => {
+                        return prev.filter((s) => {
                             return s.id !== message.id
                         })
-                        return prev
                     })
                     break
                 default:
