@@ -7,6 +7,7 @@ import onClose from "./onClose"
 
 export default async (conn: Connection) => {
     conn.uuid = uuidv4()
+    conn.streams = []
 
     conn.on("message", (data: Buffer) => {
         onMessage(data, conn)
@@ -18,7 +19,7 @@ export default async (conn: Connection) => {
 
     connections.push(conn)
 
-    let joke: string = "Hello" //await getJoke()
+    let joke: string = ""
     let stream: Stream = { id: conn.uuid, value: joke }
     streams.push(stream)
 
@@ -26,7 +27,14 @@ export default async (conn: Connection) => {
     connections.forEach((c) => console.log(c.uuid))
 
     conn.send(
-        JSON.stringify({ type: MessageType.INIT, id: conn.uuid, streams })
+        JSON.stringify({
+            type: MessageType.INIT,
+            id: conn.uuid,
+            streams: streams.map((s) => {
+                s.value = ""
+                return s
+            })
+        })
     )
 
     let message: Message = {

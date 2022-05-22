@@ -6,13 +6,14 @@ import {
     InputLeftAddon,
     ButtonGroup
 } from "@chakra-ui/react"
-import { useContext } from "react"
+import { useState, useContext } from "react"
 import Message, { MessageType } from "../types/message"
 import type Stream from "../types/stream"
 import SocketContext from "./SocketContext"
 
 export default function StackItem(props: Stream & { i: string }) {
     const conn = useContext(SocketContext)
+    const [subs, setSubs] = useState(false)
 
     function subscribe() {
         let message: Message = {
@@ -20,6 +21,7 @@ export default function StackItem(props: Stream & { i: string }) {
             id: props.id
         }
         conn.send(JSON.stringify(message))
+        setSubs((prev) => !prev)
     }
 
     function unsubscribe() {
@@ -28,6 +30,7 @@ export default function StackItem(props: Stream & { i: string }) {
             id: props.id
         }
         conn.send(JSON.stringify(message))
+        setSubs((prev) => !prev)
     }
 
     return (
@@ -49,8 +52,8 @@ export default function StackItem(props: Stream & { i: string }) {
                     isReadOnly={true}
                     value={props.value}
                     resize="vertical"
+                    roundedTopLeft={0}
                     roundedBottomLeft={0}
-                    roundedBottomRight={0}
                 />
             </InputGroup>
             <ButtonGroup
@@ -58,10 +61,16 @@ export default function StackItem(props: Stream & { i: string }) {
                 spacing={2}
                 justifyContent="center"
                 alignItems="center">
-                <Button colorScheme="yellow" onClick={subscribe}>
+                <Button
+                    colorScheme="yellow"
+                    onClick={subscribe}
+                    isDisabled={subs}>
                     Subscribe
                 </Button>
-                <Button colorScheme="red" onClick={unsubscribe}>
+                <Button
+                    colorScheme="red"
+                    onClick={unsubscribe}
+                    isDisabled={!subs}>
                     Unubscribe
                 </Button>
             </ButtonGroup>

@@ -13,11 +13,11 @@ export default function App() {
     useEffect(() => {
         ws.onopen = () => {
             console.log("WebSocket Client Connected")
-            ws.send("Hello")
         }
 
         ws.onmessage = (ev) => {
             const message: Message = JSON.parse(ev.data)
+            console.log(message)
 
             switch (message.type) {
                 case MessageType.INIT:
@@ -36,15 +36,18 @@ export default function App() {
                     break
                 case MessageType.UPDATE:
                     setStreams((prev) => {
-                        prev.every((s) => {
-                            if (s.id === message.id) {
-                                s.value = message.value!
-                                return false
-                            }
-                            return true
+                        return prev.map((st) => {
+                            message.streams!.every((s) => {
+                                if (st.id === s.id) {
+                                    st.value = s.value!
+                                    return false
+                                }
+                                return true
+                            })
+                            return st
                         })
-                        return prev
                     })
+                    console.log(streams)
                     break
                 case MessageType.REMOVE:
                     setStreams((prev) => {
@@ -58,7 +61,7 @@ export default function App() {
                     break
             }
         }
-    }, [])
+    })
 
     return (
         <VStack

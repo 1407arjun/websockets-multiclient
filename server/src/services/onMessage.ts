@@ -28,4 +28,8 @@ export default (data: Buffer, conn: Connection) => {
         default:
             break
     }
+
+    connections.forEach((c) => {
+        console.log(c.streams)
+    })
 }
