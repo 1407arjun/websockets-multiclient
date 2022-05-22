@@ -1,11 +1,9 @@
 import Message, { MessageType } from "../../../client/src/types/message"
 import getJoke from "./getJoke"
 
-export default () => {
+export default async () => {
     setInterval(async () => {
-        for (const s of streams) {
-            s.value = String(Math.random() * 100) //await getJoke()
-        }
+        for (const s of streams) s.value = await getJoke()
 
         for (const c of connections) {
             let message: Message = {

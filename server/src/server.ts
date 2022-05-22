@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 5000
 const httpServer = createServer()
 
 global.wss = new WebSocketServer({ noServer: true })
-
 wss.on("connection", onConnection)
 
 httpServer.on("upgrade", onUpgrade)

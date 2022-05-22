@@ -18,9 +18,7 @@ export default async (conn: Connection) => {
     })
 
     connections.push(conn)
-
-    let joke: string = ""
-    let stream: Stream = { id: conn.uuid, value: joke }
+    let stream: Stream = { id: conn.uuid, value: "" }
     streams.push(stream)
 
     conn.send(
