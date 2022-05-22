@@ -6,9 +6,13 @@ import {
     InputLeftAddon,
     ButtonGroup
 } from "@chakra-ui/react"
+import { useContext } from "react"
 import type Stream from "../types/stream"
+import SocketContext from "./SocketContext"
 
 export default function StackItem(props: Stream) {
+    const conn = useContext(SocketContext)
+
     return (
         <Stack
             w={{ base: "100%", xl: "90%" }}

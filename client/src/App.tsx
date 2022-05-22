@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import Stack from "./components/Stack"
 import type Stream from "./types/stream"
 import Message, { MessageType } from "./types/message"
+import SocketContext from "./components/SocketContext"
 
 let ws = new WebSocket("ws://localhost:5000")
 
@@ -69,7 +70,9 @@ export default function App() {
                 Subscribe and Unsubscribe
             </Heading>
             <Divider orientation="horizontal" />
-            <Stack streams={streams} />
+            <SocketContext.Provider value={ws}>
+                <Stack streams={streams} />
+            </SocketContext.Provider>
         </VStack>
     )
 }

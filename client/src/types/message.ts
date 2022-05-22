@@ -4,7 +4,9 @@ export const enum MessageType {
     INIT,
     ADD,
     UPDATE,
-    REMOVE
+    REMOVE,
+    SUBSCRIBE,
+    UNSUBSCRIBE
 }
 
 type Message = {
